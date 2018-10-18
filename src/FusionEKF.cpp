@@ -36,7 +36,11 @@ FusionEKF::FusionEKF() {
     * Finish initializing the FusionEKF.
     * Set the process and measurement noises
   */
-
+  // ekf.P_ and ekf_.Q_
+  ekf_.P_  << 1, 0, 0, 0,
+              0, 1, 0, 0,
+              0, 0, 1000, 0,
+              0, 0, 0, 1000;
 
 }
 
@@ -102,11 +106,24 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * Use the sensor type to perform the update step.
      * Update the state and covariance matrices.
    */
+   /*
+    * The measurement update for lidar will also use the regular Kalman filter equations, since lidar uses linear equations.
+    * Only the measurement update for the radar sensor will use the extended Kalman filter equations.
+   */
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // Radar updates
+
+    //Hj calculation
+    //...
+
+    ekf_.H_ = Hj_;
+    ekf_.R_ = R_radar_;
   } else {
     // Laser updates
+
+    ekf_.H_ = H_laser_;
+    ekf_.R_ = R_laser_;
   }
 
   // print the output
