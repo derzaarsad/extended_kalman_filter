@@ -160,28 +160,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     std::cout << "Radar Update" << std::endl;
 
     //Hj calculation
-	//recover state parameters
-	float px = ekf_.x_(0);
-	float py = ekf_.x_(1);
-	float vx = ekf_.x_(2);
-	float vy = ekf_.x_(3);
-
-	//pre-compute a set of terms to avoid repeated calculation
-	float c1 = px*px+py*py;
-	float c2 = sqrt(c1);
-	float c3 = (c1*c2);
-
-	//check division by zero
-	if(fabs(c1) < 0.0001){
-		cout << "CalculateJacobian () - Error - Division by Zero" << endl;
-        Hj_ = MatrixXd(3, 4);
-	}
-    else {
-        //compute the Jacobian matrix
-        Hj_ << (px/c2), (py/c2), 0, 0,
-                -(py/c1), (px/c1), 0, 0,
-                py*(vx*py - vy*px)/c3, px*(px*vy - py*vx)/c3, px/c2, py/c2;
-    }
+    Hj_ = tools.CalculateJacobian(ekf_.x_);
 
     ekf_.H_ = Hj_;
     ekf_.R_ = R_radar_;
