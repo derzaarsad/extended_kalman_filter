@@ -57,7 +57,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   // Conversion cartesian to polar
   Eigen::VectorXd prediction(3);
   prediction(0) = std::sqrt(x_(0)*x_(0) + x_(1)*x_(1));
-  prediction(1) = std::atan(x_(1)/x_(0));
+  prediction(1) = std::atan2(x_(1)/x_(0));
   prediction(2) = (x_(0)*x_(2)+x_(1)*x_(3))/prediction(0);
 
   Eigen::VectorXd y = z - prediction;
