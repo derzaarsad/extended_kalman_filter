@@ -61,7 +61,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   double vy = x_(3);
   Eigen::VectorXd prediction(3);
   prediction(0) = std::sqrt(px*px + py*py);
-  prediction(1) = std::atan2(py/px);
+  prediction(1) = std::atan2(py,px);
   prediction(2) = (px*vx+py*vy)/prediction(0);
 
   Eigen::VectorXd y = z - prediction;
