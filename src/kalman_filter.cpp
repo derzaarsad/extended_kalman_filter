@@ -65,6 +65,10 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   prediction(2) = (px*vx+py*vy)/prediction(0);
 
   Eigen::VectorXd y = z - prediction;
+  while(y(1) < M_PI)
+      y(1) += M_PI;
+  while(y(1) > M_PI)
+      y(1) -= M_PI;
   Eigen::MatrixXd S = H_ * P_ * H_.transpose() + R_;
   Eigen::MatrixXd K = P_ * H_.transpose() * S.inverse();
   x_ = x_ + K * y;
